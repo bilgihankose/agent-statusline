@@ -4,9 +4,9 @@ A one-line status bar for agent CLIs. One shared renderer (`core.sh`), one thin
 adapter per agent. Same layout everywhere:
 
 ```
-agent-cli-tools  main*  ·  Sonnet 5 med  ·  $2.34  ·  sys 53k  msg 104k  Σ 157k
-agent-cli-tools  main*  ·  Gemini 3.7 Flash hi  ·  ctx 87k/1.0M 8%
-agent-cli-tools  main*  ·  gpt-5.6-terra lo  ·  sys 22k  msg 6k  Σ 28k
+agent-statusline  main*  ·  Sonnet 5 med  ·  $2.34  ·  sys 53k  msg 104k  Σ 157k
+agent-statusline  main*  ·  Gemini 3.7 Flash hi  ·  ctx 87k/1.0M 8%
+agent-statusline  main*  ·  gpt-5.6-terra lo  ·  sys 22k  msg 6k  Σ 28k
 ```
 
 Every adapter renders the same shape: `project [branch] · model effort ·
@@ -29,7 +29,7 @@ Design and the `SL_*` field contract: [`SPEC.md`](SPEC.md).
 ## Install
 
 Point the agent's statusline setting straight at the adapter in your clone — no
-copy, `git pull` updates it. Replace `/path/to/agent-cli-tools` below with wherever
+copy, `git pull` updates it. Replace `/path/to/agent-statusline` below with wherever
 you cloned this repo.
 
 ### Claude Code — `~/.claude/settings.json`
@@ -38,7 +38,7 @@ you cloned this repo.
 {
   "statusLine": {
     "type": "command",
-    "command": "/bin/sh \"/path/to/agent-cli-tools/statusline/claude-code/statusline.sh\""
+    "command": "/bin/sh \"/path/to/agent-statusline/statusline/claude-code/statusline.sh\""
   }
 }
 ```
@@ -48,7 +48,7 @@ Start a **new** session to pick it up.
 ### agy — inside the CLI
 
 ```
-/statusline /path/to/agent-cli-tools/statusline/agy/statusline.sh
+/statusline /path/to/agent-statusline/statusline/agy/statusline.sh
 /statusline on
 ```
 
@@ -59,7 +59,7 @@ or `~/.gemini/antigravity-cli/settings.json`:
   "statusLine": {
     "type": "command",
     "enabled": true,
-    "command": "/bin/sh \"/path/to/agent-cli-tools/statusline/agy/statusline.sh\""
+    "command": "/bin/sh \"/path/to/agent-statusline/statusline/agy/statusline.sh\""
   }
 }
 ```

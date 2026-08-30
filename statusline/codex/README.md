@@ -5,12 +5,12 @@ from `~/.codex/sessions/` (or parsed stdin) and maps it onto the shared
 [`../core.sh`](../core.sh) renderer.
 
 ```
-agent-cli-tools  main*  ·  gpt-5.6-terra lo  ·  sys 22k  msg 6k  Σ 28k
+agent-statusline  main*  ·  gpt-5.6-terra lo  ·  sys 22k  msg 6k  Σ 28k
 ```
 
 | Segment | Meaning |
 | --- | --- |
-| `agent-cli-tools` | project dir basename from session metadata |
+| `agent-statusline` | project dir basename from session metadata |
 | `main*` | git branch, `*` = uncommitted changes |
 | `gpt-5.6-terra lo` | active model + normalised effort (`lo` / `med` / `hi` / `max`) |
 | `sys 22k` | approx. tokens held by system prompt + tool schemas + first message (first `token_count` event) |
@@ -33,18 +33,18 @@ operates standalone (terminal prompt, tmux status bar, or cron/watch):
 
 ### 1. Standalone / Auto-detect latest session
 ```bash
-/bin/sh /path/to/agent-cli-tools/statusline/codex/statusline.sh
+/bin/sh /path/to/agent-statusline/statusline/codex/statusline.sh
 ```
 
 ### 2. Specific session file
 ```bash
-/bin/sh /path/to/agent-cli-tools/statusline/codex/statusline.sh ~/.codex/sessions/2026/07/24/rollout-*.jsonl
+/bin/sh /path/to/agent-statusline/statusline/codex/statusline.sh ~/.codex/sessions/2026/07/24/rollout-*.jsonl
 ```
 
 ### 3. Tmux statusline integration
 In `~/.tmux.conf`:
 ```tmux
-set -g status-right "#(/bin/sh /path/to/agent-cli-tools/statusline/codex/statusline.sh)"
+set -g status-right "#(/bin/sh /path/to/agent-statusline/statusline/codex/statusline.sh)"
 set -g status-interval 5
 ```
 

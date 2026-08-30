@@ -8,7 +8,7 @@
 # Kurulum: agy içinde  /statusline <bu-dosyanın-yolu>   ya da
 #   ~/.gemini/antigravity-cli/settings.json:
 #   "statusLine": { "type": "command", "enabled": true,
-#     "command": "/bin/sh \"/path/to/agent-cli-tools/statusline/agy/statusline.sh\"" }
+#     "command": "/bin/sh \"/path/to/agent-statusline/statusline/agy/statusline.sh\"" }
 
 LC_ALL=C
 export LC_ALL

@@ -5,12 +5,12 @@ below the prompt on every state change. Maps Claude Code's stdin JSON onto the
 shared [`../core.sh`](../core.sh) renderer.
 
 ```
-agent-cli-tools  main*  ·  Sonnet 5 med  ·  $2.34  ·  sys 53k  msg 104k  Σ 157k
+agent-statusline  main*  ·  Sonnet 5 med  ·  $2.34  ·  sys 53k  msg 104k  Σ 157k
 ```
 
 | Segment | Meaning |
 | --- | --- |
-| `agent-cli-tools` | project dir basename |
+| `agent-statusline` | project dir basename |
 | `main*` | git branch, `*` = uncommitted changes |
 | `Sonnet 5 med` | model display name + reasoning effort (`lo` / `med` / `hi` / `max`) |
 | `$2.34` | cumulative session cost in USD (yellow at ≥ $5) |
@@ -38,7 +38,7 @@ collapses to a plain `ctx Σ/window %` segment.
 {
   "statusLine": {
     "type": "command",
-    "command": "/bin/sh \"/path/to/agent-cli-tools/statusline/claude-code/statusline.sh\""
+    "command": "/bin/sh \"/path/to/agent-statusline/statusline/claude-code/statusline.sh\""
   }
 }
 ```

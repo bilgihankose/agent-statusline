@@ -5,12 +5,12 @@ A one-line status bar for the [Antigravity CLI](https://antigravity.google)
 renderer.
 
 ```
-agent-cli-tools  main*  ·  Gemini 3.7 Flash hi  ·  ctx 87k/1.0M 8%
+agent-statusline  main*  ·  Gemini 3.7 Flash hi  ·  ctx 87k/1.0M 8%
 ```
 
 | Segment | Meaning |
 | --- | --- |
-| `agent-cli-tools` | project dir basename |
+| `agent-statusline` | project dir basename |
 | `main*` | git branch, `*` = uncommitted changes |
 | `Gemini 3.7 Flash hi` | model (trailing `(High)` stripped) + effort (`lo` / `med` / `hi` / `max`) |
 | `ctx 87k/1.0M 8%` | context tokens / window / fill (green < 50%, yellow < 80%, red ≥ 80%) |
@@ -29,7 +29,7 @@ same shape.
 Inside agy:
 
 ```
-/statusline /path/to/agent-cli-tools/statusline/agy/statusline.sh
+/statusline /path/to/agent-statusline/statusline/agy/statusline.sh
 /statusline on
 ```
 
@@ -40,7 +40,7 @@ or `~/.gemini/antigravity-cli/settings.json`:
   "statusLine": {
     "type": "command",
     "enabled": true,
-    "command": "/bin/sh \"/path/to/agent-cli-tools/statusline/agy/statusline.sh\""
+    "command": "/bin/sh \"/path/to/agent-statusline/statusline/agy/statusline.sh\""
   }
 }
 ```

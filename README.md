@@ -1,4 +1,4 @@
-# agent-cli-tools
+# agent-statusline
 
 Drop-in utilities for coding-agent CLIs — **Claude Code**, **Antigravity `agy`**,
 and **OpenAI Codex**. Plain `sh`, no build step, nothing to install but `jq`.
@@ -11,9 +11,9 @@ gives all of them the **same one-line readout**, so you glance at the same spot
 whichever agent you're driving:
 
 ```
-agent-cli-tools  main*  ·  Sonnet 5 med  ·  $2.34  ·  sys 53k  msg 104k  Σ 157k
-agent-cli-tools  main*  ·  Gemini 3.7 Flash hi  ·  ctx 87k/1.0M 8%
-agent-cli-tools  main*  ·  gpt-5.6-terra lo  ·  sys 22k  msg 6k  Σ 28k
+agent-statusline  main*  ·  Sonnet 5 med  ·  $2.34  ·  sys 53k  msg 104k  Σ 157k
+agent-statusline  main*  ·  Gemini 3.7 Flash hi  ·  ctx 87k/1.0M 8%
+agent-statusline  main*  ·  gpt-5.6-terra lo  ·  sys 22k  msg 6k  Σ 28k
 ```
 
 At a glance: **project + branch**, **model + reasoning effort**, **session cost**
@@ -34,9 +34,9 @@ Needs `jq`, POSIX `sh`, and `git` on `PATH`. Works on Linux and macOS.
 Paste this to Claude Code, `agy`, Codex, or any agent with shell access:
 
 ```
-Install the statusline from https://github.com/bilgihankose/agent-cli-tools for me.
+Install the statusline from https://github.com/bilgihankose/agent-statusline for me.
 
-1. Clone it somewhere stable (e.g. ~/.local/share/agent-cli-tools). If it's
+1. Clone it somewhere stable (e.g. ~/.local/share/agent-statusline). If it's
    already cloned there, git pull instead.
 2. Which agent CLI are you running inside — Claude Code, Antigravity agy, or
    Codex? If you can't tell for certain, ask me before changing any config.
