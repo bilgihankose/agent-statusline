@@ -5,13 +5,15 @@ adapter per agent. Same layout everywhere:
 
 ```
 BilgihanOS  main*  ·  Sonnet 5 med  ·  $2.34  ·  +210 -12  ·  2m18s  ·  sys 53k  msg 104k  Σ 157k
-BilgihanOS  main*  ·  Gemini 3.7 Flash hi  ·  +18 -3  ·  ctx 87k/1.0M 8%  ·  sbx  wk 41%
+BilgihanOS  main*  ·  Gemini 3.7 Flash hi  ·  ctx 87k/1.0M 8%  ·  sbx  wk 41%
+realtime-voice-chat  main*  ·  gpt-5.6-terra lo  ·  22m12s  ·  ctx 28k/258k 11%  ·  sbx  wk 68%
 ```
 
 | Adapter | Agent | Notes |
 | --- | --- | --- |
-| [`claude-code/`](claude-code/) | [Claude Code](https://claude.com/claude-code) | cost + duration + `sys/msg/Σ` token breakdown from the transcript |
-| [`agy/`](agy/) | [Antigravity CLI](https://antigravity.google) (`agy`) | native context %, weekly-quota + sandbox tail; no cost/duration in its payload |
+| [`claude-code/`](claude-code/) | [Claude Code](https://claude.com/claude-code) | cost + duration + `sys/msg/Σ` token breakdown from transcript |
+| [`agy/`](agy/) | [Antigravity CLI](https://antigravity.google) (`agy`) | native context %, weekly-quota + sandbox tail |
+| [`codex/`](codex/) | Codex | parses active session from `~/.codex/sessions/` (standalone / tmux) |
 
 Design and the `SL_*` field contract: [`SPEC.md`](SPEC.md).
 

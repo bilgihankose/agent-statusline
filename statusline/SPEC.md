@@ -12,7 +12,8 @@ statusline/
   core.sh              renderer: SL_* env -> one line on stdout
   SPEC.md              this file
   claude-code/statusline.sh   adapter: Claude Code JSON + transcript -> SL_*
-  agy/statusline.sh           adapter: Antigravity CLI JSON + git -> SL_*
+  agy/statusline.sh           adapter: Antigravity CLI JSON -> SL_*
+  codex/statusline.sh         adapter: Codex rollout JSONL / sessions -> SL_*
 ```
 
 ## SL_* contract (adapter → core)
@@ -41,7 +42,7 @@ Every field is optional. A field that is empty or `0` drops its segment.
   (used when the agent gives no window but the transcript yields a breakdown —
   Claude Code)
 - otherwise → `ctx 87k/256k 34%`
-  (used when the agent reports the window natively — agy)
+  (used when the agent reports the window natively — agy, codex)
 
 ### Colours
 
@@ -61,18 +62,15 @@ project [branch] · model [effort] · $cost · +added -removed · duration · <c
 
 ## Per-agent data availability
 
-| | Claude Code | agy |
-| --- | --- | --- |
-| stdin JSON | ✅ `model` `workspace` `cost` `transcript_path` | ✅ `model` `workspace` `context_window` `quota` `sandbox` |
-| context tokens | transcript `usage` parse → `sys/msg/Σ` | native `context_window` → `ctx N/W %` |
-| lines +/- | `cost.total_lines_*` (session-scoped) | — (not in payload) |
-| duration | `cost.total_duration_ms` | — (not in payload) |
-| cost | `cost.total_cost_usd` | — (not in payload) |
-| effort | transcript `.effort` | `model.effort` |
-| extra | — | `sbx` sandbox flag · `wk NN%` weekly quota when `< 99%` |
-
-Codex has no custom-statusline hook (fixed TUI footer), so there is no Codex
-adapter — it only informs which fields are worth showing.
+| | Claude Code | agy | Codex |
+| --- | --- | --- | --- |
+| stdin / source | JSON (`model`, `cost`, `workspace`) | JSON (`model`, `window`, `quota`) | JSONL rollouts / stdin (`~/.codex/sessions/`) |
+| context tokens | transcript `usage` parse → `sys/msg/Σ` | native `context_window` → `ctx N/W %` | rollout `token_count` → `ctx N/W %` |
+| lines +/- | `cost.total_lines_*` (session-scoped) | — (not in payload) | — |
+| duration | `cost.total_duration_ms` | — (not in payload) | timestamp diff → `XmYs` |
+| cost | `cost.total_cost_usd` | — (not in payload) | — |
+| effort | transcript `.effort` | `model.effort` | `turn_context.effort` |
+| extra | — | `sbx` sandbox · `wk NN%` quota | `sbx` sandbox · `wk NN%` quota |
 
 ## core.sh resolution
 

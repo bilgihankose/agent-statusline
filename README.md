@@ -10,7 +10,7 @@ done. Each has its own README with install instructions.
 
 | Tool | What it does |
 | --- | --- |
-| [`statusline`](statusline/) | One terminal status line, one shared renderer, a thin adapter per agent. **Claude Code:** session cost, lines changed, elapsed time, model + effort, `sys / msg / Σ` context breakdown from the transcript. **agy:** model + effort, lines changed, native context %, sandbox flag, weekly-quota tail. Contract in [`statusline/SPEC.md`](statusline/SPEC.md). |
+| [`statusline`](statusline/) | One terminal status line, one shared renderer, a thin adapter per agent. **Claude Code:** session cost, lines changed, elapsed time, model + effort, `sys / msg / Σ` context breakdown. **agy:** model + effort, native context %, sandbox flag, weekly quota. **Codex:** auto-parsed session rollout, model + effort, context %, duration, quota tail. Contract in [`statusline/SPEC.md`](statusline/SPEC.md). |
 
 ## Why this repo exists
 
