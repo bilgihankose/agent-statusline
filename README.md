@@ -25,7 +25,35 @@ otherwise.
 One shared renderer, one ~80-line adapter per agent. Adding the next agent is a
 single new file — the layout never moves.
 
-→ [install & per-agent notes](statusline/) · [`SL_*` field contract](statusline/SPEC.md)
+## Install
+
+### Let your coding agent do it
+
+Paste this to Claude Code, `agy`, Codex, or any agent with shell access:
+
+```
+Install the statusline from https://github.com/bilgihankose/agent-cli-tools for me.
+
+1. Clone it somewhere stable (e.g. ~/.local/share/agent-cli-tools). If it's
+   already cloned, git pull instead.
+2. Detect which agent CLI you're running inside, then wire that one up using the
+   ABSOLUTE clone path:
+   - Claude Code — in ~/.claude/settings.json set:
+       "statusLine": { "type": "command",
+         "command": "/bin/sh \"<clone>/statusline/claude-code/statusline.sh\"" }
+   - Antigravity agy — same idea in ~/.gemini/antigravity-cli/settings.json,
+     pointing at statusline/agy/statusline.sh, plus "enabled": true
+   - Codex — no native statusline hook: add
+       /bin/sh <clone>/statusline/codex/statusline.sh
+     to my shell prompt or tmux status-right instead
+3. Confirm `jq` is on PATH (the adapter needs it), then tell me to restart the
+   session.
+```
+
+### By hand
+
+Per-agent config snippets: [`statusline/`](statusline/) · field contract:
+[`statusline/SPEC.md`](statusline/SPEC.md)
 
 ## Why this repo exists
 
