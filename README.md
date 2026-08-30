@@ -1,10 +1,10 @@
 # agent-statusline
 
-Drop-in utilities for coding-agent CLIs — **Claude Code**, **Antigravity `agy`**,
-and **OpenAI Codex**. Plain `sh`, no build step, nothing to install but `jq`.
-Point your agent's config at a file and you're done.
+One status line for every coding-agent CLI — **Claude Code**, **Antigravity
+`agy`**, and **OpenAI Codex**. Plain `sh`, no build step, nothing to install
+but `jq`. Point your agent's config at a file and you're done.
 
-## `statusline` — one status line for every agent
+## What it does
 
 Every agent CLI reports session state in its own format, or not at all. This
 gives all of them the **same one-line readout**, so you glance at the same spot
@@ -61,8 +61,8 @@ Per-agent config snippets: [`statusline/`](statusline/) · field contract:
 ## Why this repo exists
 
 Reusable agent tooling kept ending up buried in personal dotfiles where nobody
-else could use it. This is the shareable home for it — MIT licensed, one
-directory per tool.
+else could use it. This is the shareable home for it — MIT licensed. The
+`statusline/` directory holds the shared renderer plus one adapter per agent.
 
 ## License
 
