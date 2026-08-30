@@ -27,6 +27,8 @@ single new file — the layout never moves.
 
 ## Install
 
+Needs `jq`, POSIX `sh`, and `git` on `PATH`. Works on Linux and macOS.
+
 ### Let your coding agent do it
 
 Paste this to Claude Code, `agy`, Codex, or any agent with shell access:
@@ -35,19 +37,20 @@ Paste this to Claude Code, `agy`, Codex, or any agent with shell access:
 Install the statusline from https://github.com/bilgihankose/agent-cli-tools for me.
 
 1. Clone it somewhere stable (e.g. ~/.local/share/agent-cli-tools). If it's
-   already cloned, git pull instead.
-2. Detect which agent CLI you're running inside, then wire that one up using the
-   ABSOLUTE clone path:
+   already cloned there, git pull instead.
+2. Which agent CLI are you running inside — Claude Code, Antigravity agy, or
+   Codex? If you can't tell for certain, ask me before changing any config.
+3. Wire up that one adapter, using the ABSOLUTE path to the clone:
    - Claude Code — in ~/.claude/settings.json set:
        "statusLine": { "type": "command",
          "command": "/bin/sh \"<clone>/statusline/claude-code/statusline.sh\"" }
-   - Antigravity agy — same idea in ~/.gemini/antigravity-cli/settings.json,
+   - Antigravity agy — same shape in ~/.gemini/antigravity-cli/settings.json,
      pointing at statusline/agy/statusline.sh, plus "enabled": true
-   - Codex — no native statusline hook: add
+   - Codex — no native statusline hook. Ask me where I want it (shell prompt via
+     PROMPT_COMMAND / precmd, or tmux status-right), then add:
        /bin/sh <clone>/statusline/codex/statusline.sh
-     to my shell prompt or tmux status-right instead
-3. Confirm `jq` is on PATH (the adapter needs it), then tell me to restart the
-   session.
+4. Check `jq` is on PATH (the adapter is silent without it). Then tell me to
+   restart the session.
 ```
 
 ### By hand

@@ -24,7 +24,11 @@ fi
 if [ -z "$file" ]; then
   sessions_dir="$HOME/.codex/sessions"
   if [ -d "$sessions_dir" ]; then
-    file=$(find "$sessions_dir" -type f -name "rollout-*.jsonl" -exec stat -f "%m %N" {} + 2>/dev/null \
+    # newest rollout by mtime. GNU coreutils and BSD/macOS stat take different
+    # flags, so try `stat -c` (GNU) first and fall back to `stat -f` (BSD).
+    file=$(find "$sessions_dir" -type f -name "rollout-*.jsonl" -exec sh -c '
+      for f do stat -c "%Y %n" "$f" 2>/dev/null || stat -f "%m %N" "$f" 2>/dev/null; done
+    ' sh {} + 2>/dev/null \
       | sort -n \
       | tail -n 1 \
       | cut -d' ' -f2-)

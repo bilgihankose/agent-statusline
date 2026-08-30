@@ -23,7 +23,8 @@ Sandbox / quota tails were dropped to keep all three adapters on the same shape.
 ## Requirements
 
 - `jq` on `PATH` (script exits silently if missing)
-- `sh` (POSIX), `git`
+- `sh` (POSIX), `git`, `find`, `stat` — GNU (`stat -c`) or BSD/macOS (`stat -f`),
+  the adapter tries both. Linux and macOS both work.
 
 ## Usage
 
