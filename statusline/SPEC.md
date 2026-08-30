@@ -67,7 +67,7 @@ project [branch] · model [effort] · $cost · +added -removed · duration · <c
 | stdin / source | JSON (`model`, `cost`, `workspace`) | JSON (`model`, `window`, `quota`) | JSONL rollouts / stdin (`~/.codex/sessions/`) |
 | context tokens | transcript `usage` parse → `sys/msg/Σ` | native `context_window` → `ctx N/W %` | rollout `token_count` → `ctx N/W %` |
 | lines +/- | `cost.total_lines_*` (session-scoped) | — (not in payload) | — |
-| duration | `cost.total_duration_ms` | — (not in payload) | timestamp diff → `XmYs` |
+| duration | `cost.total_duration_ms` | — (not in payload) | — |
 | cost | `cost.total_cost_usd` | — (not in payload) | — |
 | effort | transcript `.effort` | `model.effort` | `turn_context.effort` |
 | extra | — | `sbx` sandbox · `wk NN%` quota | `sbx` sandbox · `wk NN%` quota |

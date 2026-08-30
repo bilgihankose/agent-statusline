@@ -6,7 +6,7 @@ adapter per agent. Same layout everywhere:
 ```
 BilgihanOS  main*  ·  Sonnet 5 med  ·  $2.34  ·  +210 -12  ·  2m18s  ·  sys 53k  msg 104k  Σ 157k
 BilgihanOS  main*  ·  Gemini 3.7 Flash hi  ·  ctx 87k/1.0M 8%  ·  sbx  wk 41%
-realtime-voice-chat  main*  ·  gpt-5.6-terra lo  ·  22m12s  ·  ctx 28k/258k 11%  ·  sbx  wk 68%
+realtime-voice-chat  main*  ·  gpt-5.6-terra lo  ·  ctx 28k/258k 11%  ·  sbx  wk 68%
 ```
 
 | Adapter | Agent | Notes |

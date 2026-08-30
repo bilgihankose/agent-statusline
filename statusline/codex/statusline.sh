@@ -79,14 +79,6 @@ if [ -n "$cwd" ] && command -v git >/dev/null 2>&1 && git -C "$cwd" rev-parse --
   [ -n "$branch" ] && [ -n "$(git -C "$cwd" status --porcelain 2>/dev/null)" ] && branch="${branch}*"
 fi
 
-# --- süre ---
-dur=""
-if [ -n "$secs" ] && [ "$secs" -gt 0 ]; then
-  if   [ "$secs" -ge 3600 ]; then dur="$((secs / 3600))h$(((secs % 3600) / 60))m"
-  elif [ "$secs" -ge 60 ];   then dur="$((secs / 60))m$((secs % 60))s"
-  else dur="${secs}s"; fi
-fi
-
 # --- araç-özel kuyruk: sandbox + kalan kota ---
 DIM='\033[2m'; RST='\033[0m'; YEL='\033[33m'
 extra=""
@@ -116,7 +108,7 @@ export SL_CTX_SYS=0
 export SL_CTX_MSG=0
 export SL_ADDED=0
 export SL_REMOVED=0
-export SL_DURATION="$dur"
+export SL_DURATION=""          # süre segmenti yok
 export SL_COST=""
 export SL_EXTRA="$extra"
 

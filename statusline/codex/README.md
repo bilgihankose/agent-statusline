@@ -5,7 +5,7 @@ from `~/.codex/sessions/` (or parsed stdin) and maps it onto the shared
 [`../core.sh`](../core.sh) renderer.
 
 ```
-realtime-voice-chat  main*  ·  gpt-5.6-terra lo  ·  22m12s  ·  ctx 28k/258k 11%  ·  sbx  wk 68%
+realtime-voice-chat  main*  ·  gpt-5.6-terra lo  ·  ctx 28k/258k 11%  ·  sbx  wk 68%
 ```
 
 | Segment | Meaning |
@@ -13,7 +13,6 @@ realtime-voice-chat  main*  ·  gpt-5.6-terra lo  ·  22m12s  ·  ctx 28k/258k 1
 | `realtime-voice-chat` | project dir basename from session metadata |
 | `main*` | git branch, `*` = uncommitted changes |
 | `gpt-5.6-terra lo` | active model + normalised effort (`lo` / `med` / `hi` / `max`) |
-| `22m12s` | elapsed duration calculated from session timestamps |
 | `ctx 28k/258k 11%` | last turn context tokens / model context window / percentage |
 | `sbx` | shown when the session runs in a sandbox container/profile |
 | `wk 68%` | rate-limit quota remaining (derived from `rate_limits.primary.used_percent`) |
