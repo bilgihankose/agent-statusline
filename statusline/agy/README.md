@@ -5,7 +5,7 @@ A one-line status bar for the [Antigravity CLI](https://antigravity.google)
 renderer.
 
 ```
-BilgihanOS  main*  ·  Gemini 3.7 Flash hi  ·  +18 -3  ·  ctx 87k/1.0M 8%  ·  sbx  wk 41%
+BilgihanOS  main*  ·  Gemini 3.7 Flash hi  ·  ctx 87k/1.0M 8%  ·  sbx  wk 41%
 ```
 
 | Segment | Meaning |
@@ -13,12 +13,11 @@ BilgihanOS  main*  ·  Gemini 3.7 Flash hi  ·  +18 -3  ·  ctx 87k/1.0M 8%  · 
 | `BilgihanOS` | project dir basename |
 | `main*` | git branch, `*` = uncommitted changes |
 | `Gemini 3.7 Flash hi` | model (trailing `(High)` stripped) + effort (`lo` / `med` / `hi` / `max`) |
-| `+18 -3` | lines added / removed, `git diff --numstat HEAD` (working tree vs HEAD — agy gives no session baseline) |
 | `ctx 87k/1.0M 8%` | context tokens / window / fill (green < 50%, yellow < 80%, red ≥ 80%) |
 | `sbx` | shown when the session runs under `--sandbox` |
 | `wk 41%` | weekly Gemini quota remaining — only shown below 99%, yellow below 20% |
 
-No cost or duration segment: agy's statusline payload carries neither.
+No cost, duration, or line change segment: agy's statusline payload carries none of these.
 
 ## Requirements
 
@@ -61,4 +60,4 @@ agy pipes a JSON blob very close to Claude Code's — same `model` / `workspace`
   `remaining_fraction`
 - `sandbox.enabled`
 
-Lines added/removed are not in the payload, so they come from `git`.
+

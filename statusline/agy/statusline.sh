@@ -5,7 +5,7 @@
 #   - .model.effort     : reasoning effort
 #   - .quota            : rate-limit kovaları (5h / haftalık)
 #   - .sandbox.enabled  : sandbox kipi
-#   - maliyet / süre / satır bilgisi YOK -> satırlar git'ten hesaplanır, maliyet atlanır
+#   - maliyet / süre / satır bilgisi YOK (bu segmentler atlanır)
 #
 # Kurulum: agy içinde  /statusline <bu-dosyanın-yolu>   ya da
 #   ~/.gemini/antigravity-cli/settings.json:
@@ -47,15 +47,12 @@ case "$effort" in
   *)      eff=""    ;;
 esac
 
-# --- git dalı + satır değişimi (working tree vs HEAD; agy oturum tabanı vermiyor) ---
-branch=""; added=0; removed=0
+# --- git dalı (kirli işareti) ---
+branch=""
 if [ -n "$cwd" ] && command -v git >/dev/null 2>&1 && git -C "$cwd" rev-parse --git-dir >/dev/null 2>&1; then
   branch=$(git -C "$cwd" symbolic-ref --quiet --short HEAD 2>/dev/null \
            || git -C "$cwd" rev-parse --short HEAD 2>/dev/null)
   [ -n "$branch" ] && [ -n "$(git -C "$cwd" status --porcelain 2>/dev/null)" ] && branch="${branch}*"
-  set -- $(git -C "$cwd" diff --numstat HEAD 2>/dev/null | awk '
-    $1 ~ /^[0-9]+$/ { a += $1 } $2 ~ /^[0-9]+$/ { r += $2 } END { print a + 0, r + 0 }')
-  added=${1:-0}; removed=${2:-0}
 fi
 
 # --- bağlam: yüzde varsa ondan geri hesapla, yoksa current_usage, yoksa input token ---
@@ -89,8 +86,8 @@ export SL_CTX_USED="$used"
 export SL_CTX_WINDOW="$win"
 export SL_CTX_SYS=0            # agy kırılım vermiyor -> "ctx Σ/pencere %" biçimi
 export SL_CTX_MSG=0
-export SL_ADDED="$added"
-export SL_REMOVED="$removed"
+export SL_ADDED=0              # agy oturum satır verisi vermiyor
+export SL_REMOVED=0
 export SL_DURATION=""          # agy payload'ında süre yok
 export SL_COST=""              # agy payload'ında maliyet yok
 export SL_EXTRA="$extra"

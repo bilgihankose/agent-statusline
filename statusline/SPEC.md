@@ -65,7 +65,7 @@ project [branch] · model [effort] · $cost · +added -removed · duration · <c
 | --- | --- | --- |
 | stdin JSON | ✅ `model` `workspace` `cost` `transcript_path` | ✅ `model` `workspace` `context_window` `quota` `sandbox` |
 | context tokens | transcript `usage` parse → `sys/msg/Σ` | native `context_window` → `ctx N/W %` |
-| lines +/- | `cost.total_lines_*` (session-scoped) | `git diff --numstat HEAD` (tree-scoped proxy) |
+| lines +/- | `cost.total_lines_*` (session-scoped) | — (not in payload) |
 | duration | `cost.total_duration_ms` | — (not in payload) |
 | cost | `cost.total_cost_usd` | — (not in payload) |
 | effort | transcript `.effort` | `model.effort` |
