@@ -9,7 +9,7 @@
 #
 # Kurulum: ~/.claude/settings.json
 #   "statusLine": { "type": "command",
-#     "command": "/bin/sh \"$HOME/opensource/agent-cli-tools/statusline/claude-code/statusline.sh\"" }
+#     "command": "/bin/sh \"/path/to/agent-cli-tools/statusline/claude-code/statusline.sh\"" }
 
 LC_ALL=C
 export LC_ALL

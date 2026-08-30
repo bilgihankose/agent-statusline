@@ -7,7 +7,7 @@
 # Çıktı: SL_* değişkenleri üzerinden shared core.sh renderer'ı çağırır.
 #
 # Kullanım:
-#   - Standalone / tmux: /bin/sh ~/opensource/agent-cli-tools/statusline/codex/statusline.sh
+#   - Standalone / tmux: /bin/sh /path/to/agent-cli-tools/statusline/codex/statusline.sh
 #   - Belirli oturum:    /bin/sh .../statusline.sh ~/.codex/sessions/2026/07/24/rollout-*.jsonl
 
 LC_ALL=C
