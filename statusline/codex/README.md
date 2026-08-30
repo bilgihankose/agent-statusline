@@ -5,12 +5,12 @@ from `~/.codex/sessions/` (or parsed stdin) and maps it onto the shared
 [`../core.sh`](../core.sh) renderer.
 
 ```
-realtime-voice-chat  main*  ·  gpt-5.6-terra lo  ·  sys 22k  msg 6k  Σ 28k
+agent-cli-tools  main*  ·  gpt-5.6-terra lo  ·  sys 22k  msg 6k  Σ 28k
 ```
 
 | Segment | Meaning |
 | --- | --- |
-| `realtime-voice-chat` | project dir basename from session metadata |
+| `agent-cli-tools` | project dir basename from session metadata |
 | `main*` | git branch, `*` = uncommitted changes |
 | `gpt-5.6-terra lo` | active model + normalised effort (`lo` / `med` / `hi` / `max`) |
 | `sys 22k` | approx. tokens held by system prompt + tool schemas + first message (first `token_count` event) |

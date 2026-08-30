@@ -11,9 +11,9 @@ gives all of them the **same one-line readout**, so you glance at the same spot
 whichever agent you're driving:
 
 ```
-BilgihanOS  main*  ·  Sonnet 5 med  ·  $2.34  ·  sys 53k  msg 104k  Σ 157k
-BilgihanOS  main*  ·  Gemini 3.7 Flash hi  ·  ctx 87k/1.0M 8%
-realtime-voice-chat  main*  ·  gpt-5.6-terra lo  ·  sys 22k  msg 6k  Σ 28k
+agent-cli-tools  main*  ·  Sonnet 5 med  ·  $2.34  ·  sys 53k  msg 104k  Σ 157k
+agent-cli-tools  main*  ·  Gemini 3.7 Flash hi  ·  ctx 87k/1.0M 8%
+agent-cli-tools  main*  ·  gpt-5.6-terra lo  ·  sys 22k  msg 6k  Σ 28k
 ```
 
 At a glance: **project + branch**, **model + reasoning effort**, **session cost**

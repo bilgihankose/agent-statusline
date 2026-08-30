@@ -4,9 +4,9 @@ A one-line status bar for agent CLIs. One shared renderer (`core.sh`), one thin
 adapter per agent. Same layout everywhere:
 
 ```
-BilgihanOS  main*  ·  Sonnet 5 med  ·  $2.34  ·  sys 53k  msg 104k  Σ 157k
-BilgihanOS  main*  ·  Gemini 3.7 Flash hi  ·  ctx 87k/1.0M 8%
-realtime-voice-chat  main*  ·  gpt-5.6-terra lo  ·  sys 22k  msg 6k  Σ 28k
+agent-cli-tools  main*  ·  Sonnet 5 med  ·  $2.34  ·  sys 53k  msg 104k  Σ 157k
+agent-cli-tools  main*  ·  Gemini 3.7 Flash hi  ·  ctx 87k/1.0M 8%
+agent-cli-tools  main*  ·  gpt-5.6-terra lo  ·  sys 22k  msg 6k  Σ 28k
 ```
 
 Every adapter renders the same shape: `project [branch] · model effort ·
@@ -47,7 +47,7 @@ Start a **new** session to pick it up.
 ### agy — inside the CLI
 
 ```
-/statusline /Users/you/opensource/agent-cli-tools/statusline/agy/statusline.sh
+/statusline $HOME/opensource/agent-cli-tools/statusline/agy/statusline.sh
 /statusline on
 ```
 
