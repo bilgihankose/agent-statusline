@@ -32,18 +32,18 @@ operates standalone (terminal prompt, tmux status bar, or cron/watch):
 
 ### 1. Standalone / Auto-detect latest session
 ```bash
-/bin/sh ~/opensource/agent-cli-tools/statusline/codex/statusline.sh
+/bin/sh /path/to/agent-cli-tools/statusline/codex/statusline.sh
 ```
 
 ### 2. Specific session file
 ```bash
-/bin/sh ~/opensource/agent-cli-tools/statusline/codex/statusline.sh ~/.codex/sessions/2026/07/24/rollout-*.jsonl
+/bin/sh /path/to/agent-cli-tools/statusline/codex/statusline.sh ~/.codex/sessions/2026/07/24/rollout-*.jsonl
 ```
 
 ### 3. Tmux statusline integration
 In `~/.tmux.conf`:
 ```tmux
-set -g status-right "#(/bin/sh $HOME/opensource/agent-cli-tools/statusline/codex/statusline.sh)"
+set -g status-right "#(/bin/sh /path/to/agent-cli-tools/statusline/codex/statusline.sh)"
 set -g status-interval 5
 ```
 

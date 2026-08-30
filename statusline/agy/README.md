@@ -29,7 +29,7 @@ same shape.
 Inside agy:
 
 ```
-/statusline $HOME/opensource/agent-cli-tools/statusline/agy/statusline.sh
+/statusline /path/to/agent-cli-tools/statusline/agy/statusline.sh
 /statusline on
 ```
 
@@ -40,7 +40,7 @@ or `~/.gemini/antigravity-cli/settings.json`:
   "statusLine": {
     "type": "command",
     "enabled": true,
-    "command": "/bin/sh \"$HOME/opensource/agent-cli-tools/statusline/agy/statusline.sh\""
+    "command": "/bin/sh \"/path/to/agent-cli-tools/statusline/agy/statusline.sh\""
   }
 }
 ```

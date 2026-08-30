@@ -29,7 +29,8 @@ Design and the `SL_*` field contract: [`SPEC.md`](SPEC.md).
 ## Install
 
 Point the agent's statusline setting straight at the adapter in your clone — no
-copy, `git pull` updates it.
+copy, `git pull` updates it. Replace `/path/to/agent-cli-tools` below with wherever
+you cloned this repo.
 
 ### Claude Code — `~/.claude/settings.json`
 
@@ -37,7 +38,7 @@ copy, `git pull` updates it.
 {
   "statusLine": {
     "type": "command",
-    "command": "/bin/sh \"$HOME/opensource/agent-cli-tools/statusline/claude-code/statusline.sh\""
+    "command": "/bin/sh \"/path/to/agent-cli-tools/statusline/claude-code/statusline.sh\""
   }
 }
 ```
@@ -47,7 +48,7 @@ Start a **new** session to pick it up.
 ### agy — inside the CLI
 
 ```
-/statusline $HOME/opensource/agent-cli-tools/statusline/agy/statusline.sh
+/statusline /path/to/agent-cli-tools/statusline/agy/statusline.sh
 /statusline on
 ```
 
@@ -58,7 +59,7 @@ or `~/.gemini/antigravity-cli/settings.json`:
   "statusLine": {
     "type": "command",
     "enabled": true,
-    "command": "/bin/sh \"$HOME/opensource/agent-cli-tools/statusline/agy/statusline.sh\""
+    "command": "/bin/sh \"/path/to/agent-cli-tools/statusline/agy/statusline.sh\""
   }
 }
 ```

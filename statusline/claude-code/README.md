@@ -38,7 +38,7 @@ collapses to a plain `ctx Σ/window %` segment.
 {
   "statusLine": {
     "type": "command",
-    "command": "/bin/sh \"$HOME/opensource/agent-cli-tools/statusline/claude-code/statusline.sh\""
+    "command": "/bin/sh \"/path/to/agent-cli-tools/statusline/claude-code/statusline.sh\""
   }
 }
 ```
