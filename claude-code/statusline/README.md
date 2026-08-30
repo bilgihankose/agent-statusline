@@ -30,27 +30,44 @@ reflected immediately.
 
 ## Install
 
-1. Copy the script somewhere stable:
+Pick one of two ways to wire it up, then start a **new** Claude Code session (a
+running one won't pick up the change).
 
-   ```sh
-   mkdir -p ~/.claude
-   cp claude-code/statusline/statusline.sh ~/.claude/statusline.sh
-   chmod +x ~/.claude/statusline.sh
-   ```
+### A — run it in place from the clone
 
-2. Point Claude Code at it in `~/.claude/settings.json`:
+No copy. Point `~/.claude/settings.json` straight at wherever you cloned this repo:
 
-   ```json
-   {
-     "statusLine": {
-       "type": "command",
-       "command": "/bin/sh \"$HOME/.claude/statusline.sh\""
-     }
-   }
-   ```
+```json
+{
+  "statusLine": {
+    "type": "command",
+    "command": "/bin/sh \"$HOME/path/to/agent-cli-tools/claude-code/statusline/statusline.sh\""
+  }
+}
+```
 
-3. Start a new Claude Code session — the line appears under the input box.
-   (An already-running session won't pick it up.)
+`git pull` updates the script; nothing else to do.
+
+### B — copy it somewhere stable
+
+Independent of the repo afterwards:
+
+```sh
+mkdir -p ~/.claude
+cp claude-code/statusline/statusline.sh ~/.claude/statusline.sh
+chmod +x ~/.claude/statusline.sh
+```
+
+```json
+{
+  "statusLine": {
+    "type": "command",
+    "command": "/bin/sh \"$HOME/.claude/statusline.sh\""
+  }
+}
+```
+
+You re-copy by hand when the script changes.
 
 ## How it reads data
 
