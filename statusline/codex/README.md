@@ -5,7 +5,7 @@ from `~/.codex/sessions/` (or parsed stdin) and maps it onto the shared
 [`../core.sh`](../core.sh) renderer.
 
 ```
-realtime-voice-chat  main*  ·  gpt-5.6-terra lo  ·  ctx 28k/258k 11%  ·  sbx  wk 68%
+realtime-voice-chat  main*  ·  gpt-5.6-terra lo  ·  sys 22k  msg 6k  Σ 28k
 ```
 
 | Segment | Meaning |
@@ -13,9 +13,12 @@ realtime-voice-chat  main*  ·  gpt-5.6-terra lo  ·  ctx 28k/258k 11%  ·  sbx 
 | `realtime-voice-chat` | project dir basename from session metadata |
 | `main*` | git branch, `*` = uncommitted changes |
 | `gpt-5.6-terra lo` | active model + normalised effort (`lo` / `med` / `hi` / `max`) |
-| `ctx 28k/258k 11%` | last turn context tokens / model context window / percentage |
-| `sbx` | shown when the session runs in a sandbox container/profile |
-| `wk 68%` | rate-limit quota remaining (derived from `rate_limits.primary.used_percent`) |
+| `sys 22k` | approx. tokens held by system prompt + tool schemas + first message (first `token_count` event) |
+| `msg 6k` | approx. tokens accumulated by the conversation since (last `token_count` − first) |
+| `Σ 28k` | last turn context tokens (green < 50%, yellow < 80%, red ≥ 80% of the window) |
+
+No cost, duration, or line-change segment: Codex rollouts carry none of these.
+Sandbox / quota tails were dropped to keep all three adapters on the same shape.
 
 ## Requirements
 
@@ -48,6 +51,10 @@ set -g status-interval 5
 
 The adapter inspects Codex rollout files (`.jsonl`) which record:
 
-- `turn_context` — `model`, `effort`, `cwd`, `sandbox_policy`
-- `event_msg` (`token_count`) — `last_token_usage.input_tokens`, `model_context_window`, `rate_limits`
-- `session_meta` and message timestamps — session elapsed time calculation
+- `turn_context` — `model`, `effort`, `cwd`
+- `event_msg` (`token_count`) — `last_token_usage.input_tokens`, `model_context_window`
+- `session_meta` — project dir fallback
+
+The `sys` baseline is the **first** `token_count` event's `last_token_usage.input_tokens`;
+`msg` is `Σ − sys`. A session with only one `token_count` event (fresh session)
+has `msg = 0`, so the segment collapses to a plain `ctx Σ/window %`.

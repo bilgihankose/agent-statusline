@@ -1,7 +1,7 @@
 # agent-cli-tools
 
 Small, self-contained utilities for coding-agent CLIs — Claude Code, Antigravity
-`agy`, and (later) OpenAI Codex.
+`agy`, and OpenAI Codex.
 
 Every tool is plain `sh` with no build step. Point your agent's config at it,
 done. Each has its own README with install instructions.
@@ -10,7 +10,7 @@ done. Each has its own README with install instructions.
 
 | Tool | What it does |
 | --- | --- |
-| [`statusline`](statusline/) | One terminal status line, one shared renderer, a thin adapter per agent. **Claude Code:** session cost, lines changed, elapsed time, model + effort, `sys / msg / Σ` context breakdown. **agy:** model + effort, native context %, sandbox flag, weekly quota. **Codex:** auto-parsed session rollout, model + effort, context %, duration, quota tail. Contract in [`statusline/SPEC.md`](statusline/SPEC.md). |
+| [`statusline`](statusline/) | One terminal status line, one shared renderer, a thin adapter per agent. Same shape everywhere: `project [branch] · model effort · [$cost] · context`. **Claude Code** adds session cost and reads effort/context straight from the stdin blob; **Claude Code** and **Codex** show a `sys / msg / Σ` context breakdown, **agy** shows `ctx N/W %`. Contract in [`statusline/SPEC.md`](statusline/SPEC.md). |
 
 ## Why this repo exists
 

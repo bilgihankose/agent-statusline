@@ -39,12 +39,9 @@ eval "$(jq -s -r '
   def last_val(arr): if (arr | length) > 0 then arr[-1] else null end;
   (map(select(.type == "session_meta")) | last_val(.)) as $meta |
   (map(select(.type == "turn_context")) | last_val(.)) as $ctx |
-  (map(select(.type == "event_msg" and .payload.type == "token_count")) | last_val(.)) as $tok |
-  
-  (if (.[0].timestamp and .[-1].timestamp) then
-    ( (.[-1].timestamp | sub("\\.[0-9]+Z$"; "Z") | fromdateiso8601) - 
-      (.[0].timestamp   | sub("\\.[0-9]+Z$"; "Z") | fromdateiso8601) )
-   else 0 end) as $elapsed |
+  (map(select(.type == "event_msg" and .payload.type == "token_count"))) as $toks |
+  ($toks | last_val(.)) as $tok |
+  (if ($toks | length) > 0 then $toks[0] else null end) as $tok0 |
 
   @sh "model=\($ctx.payload.model // "codex")",
   @sh "effort=\($ctx.payload.effort // $ctx.payload.collaboration_mode.settings.reasoning_effort // "")",
@@ -52,15 +49,23 @@ eval "$(jq -s -r '
   @sh "cwd=\($ctx.payload.cwd // $meta.payload.cwd // "")",
   @sh "win=\($tok.payload.info.model_context_window // 0 | floor)",
   @sh "used=\($tok.payload.info.last_token_usage.input_tokens // $tok.payload.info.total_token_usage.input_tokens // 0 | floor)",
-  @sh "sandbox=\(if $ctx.payload.sandbox_policy.type != null then "true" else "false" end)",
-  @sh "secs=\($elapsed | floor)",
-  @sh "quota_used=\($tok.payload.rate_limits.primary.used_percent // 0)"
+  @sh "base=\($tok0.payload.info.last_token_usage.input_tokens // 0 | floor)"
 ' "$file" 2>/dev/null)"
 
 [ -z "$model" ] && model="codex"
 
 proj_name=$(basename "$proj" 2>/dev/null)
 [ -z "$proj_name" ] && proj_name="~"
+
+# --- sys/msg kırılımı ---
+# ilk token_count kaydı ~= sistem promptu + tool tanımları + ilk mesaj  (= "sys")
+# son kayıt          ~= güncel bağlamın tamamı  (= "Σ")
+# fark               ~= biriken konuşma  (= "msg")
+# tek kayıt varsa (yeni oturum) msg=0 -> core sade "ctx N/W %" biçimine düşer
+case "$base" in ''|*[!0-9]*) base=0 ;; esac
+case "$used" in ''|*[!0-9]*) used=0 ;; esac
+msg=$((used - base)); [ "$msg" -lt 0 ] && msg=0
+[ "$base" -gt "$used" ] && base=0
 
 case "$effort" in
   low)       eff="lo"  ;;
@@ -79,37 +84,18 @@ if [ -n "$cwd" ] && command -v git >/dev/null 2>&1 && git -C "$cwd" rev-parse --
   [ -n "$branch" ] && [ -n "$(git -C "$cwd" status --porcelain 2>/dev/null)" ] && branch="${branch}*"
 fi
 
-# --- araç-özel kuyruk: sandbox + kalan kota ---
-DIM='\033[2m'; RST='\033[0m'; YEL='\033[33m'
-extra=""
-[ "$sandbox" = "true" ] && extra="${DIM}sbx${RST}"
-
-if [ -n "$quota_used" ]; then
-  qu_int=$(printf '%s' "$quota_used" | cut -d. -f1)
-  case "$qu_int" in ''|*[!0-9]*) qu_int=0 ;; esac
-  if [ "$qu_int" -gt 0 ]; then
-    rem_pct=$((100 - qu_int))
-    [ "$rem_pct" -lt 0 ] && rem_pct=0
-    if [ "$rem_pct" -lt 99 ]; then
-      wcol="$DIM"; [ "$rem_pct" -lt 20 ] && wcol="$YEL"
-      seg="${wcol}wk ${rem_pct}%${RST}"
-      [ -n "$extra" ] && extra="${extra} ${seg}" || extra="$seg"
-    fi
-  fi
-fi
-
 export SL_PROJECT="$proj_name"
 export SL_BRANCH="$branch"
 export SL_MODEL="$model"
 export SL_EFFORT="$eff"
 export SL_CTX_USED="${used:-0}"
 export SL_CTX_WINDOW="${win:-0}"
-export SL_CTX_SYS=0
-export SL_CTX_MSG=0
+export SL_CTX_SYS="$base"
+export SL_CTX_MSG="$msg"
 export SL_ADDED=0
 export SL_REMOVED=0
 export SL_DURATION=""          # süre segmenti yok
 export SL_COST=""
-export SL_EXTRA="$extra"
+export SL_EXTRA=""             # sbx/kota kuyruğu kaldırıldı — üç adaptör aynı biçim
 
 exec /bin/sh "$CORE"

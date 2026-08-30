@@ -1,7 +1,10 @@
 #!/bin/sh
 # Claude Code statusline adaptörü.
-# Claude Code stdin'e bir JSON nesnesi verir (.model, .workspace, .cost, .transcript_path).
-# Bağlam token kırılımı transcript'teki usage kayıtlarından yaklaşık çıkarılır.
+# Claude Code stdin'e bir JSON nesnesi verir. v2.1+ payload'ında effort, bağlam
+# penceresi ve kullanılan token doğrudan bulunur (.effort, .context_window) —
+# bunlar oturumun ilk turundan itibaren dolu gelir, transcript parse'ına gerek yok.
+# Sadece sys/msg kırılımının tabanı transcript'teki ilk usage kaydından alınır
+# (best-effort; transcript boşsa sade "ctx Σ/pencere %" biçimine düşer).
 # Normalize alanları SL_* olarak çekirdek renderer'a devreder.
 #
 # Kurulum: ~/.claude/settings.json
@@ -20,10 +23,10 @@ eval "$(printf '%s' "$input" | jq -r '
   @sh "proj=\(.workspace.project_dir // .workspace.current_dir // "")",
   @sh "cwd=\(.workspace.current_dir // .cwd // "")",
   @sh "tpath=\(.transcript_path // "")",
-  @sh "cents=\(((.cost.total_cost_usd // 0) * 100) | floor)",
-  @sh "added=\(.cost.total_lines_added // 0)",
-  @sh "removed=\(.cost.total_lines_removed // 0)",
-  @sh "secs=\(((.cost.total_duration_ms // 0) / 1000) | floor)"
+  @sh "effort=\(.effort.level // "")",
+  @sh "ctx_used=\(.context_window.total_input_tokens // 0)",
+  @sh "ctx_win=\(.context_window.context_window_size // 0)",
+  @sh "cents=\(((.cost.total_cost_usd // 0) * 100) | floor)"
 ')"
 
 proj_name=$(basename "$proj" 2>/dev/null)
@@ -43,51 +46,45 @@ fi
 dollars=$((cents / 100)); rem=$((cents % 100))
 cost_fmt=$(printf '%d.%02d' "$dollars" "$rem")
 
-# --- süre ---
-if   [ "$secs" -ge 3600 ]; then dur="$((secs / 3600))h$(((secs % 3600) / 60))m"
-elif [ "$secs" -ge 60 ];   then dur="$((secs / 60))m$((secs % 60))s"
-else dur="${secs}s"; fi
-
-# --- bağlam kırılımı: transcript'teki ilk vs son usage kaydı ---
+# --- sys tabanı: transcript'teki ilk usage kaydı (best-effort) ---
 # ilk asistan turu ~= sistem promptu + tool tanımları + hafıza + ilk mesaj  (= "sys")
-# son tur toplam   ~= güncel bağlamın tamamı  (= "Σ")
-# fark             ~= o günden bu yana biriken konuşma  (= "msg")
-base_tok=0; cur_tok=0; effort="-"
+# ctx_used (payload) ~= güncel bağlamın tamamı  (= "Σ")
+# fark               ~= o günden bu yana biriken konuşma  (= "msg")
+base_tok=0
 if [ -n "$tpath" ] && [ -r "$tpath" ]; then
-  set -- $(jq -rs '
-    ([ .[] | select(.message.usage) | .message.usage
-       | (.input_tokens // 0) + (.cache_read_input_tokens // 0) + (.cache_creation_input_tokens // 0) ]) as $t
-    | ([ .[] | select(.type == "assistant" or .message.role == "assistant") | .effort // empty ]) as $e
-    | (if ($t | length) > 0 then $t[0]  else 0 end),
-      (if ($t | length) > 0 then $t[-1] else 0 end),
-      ($e[-1] // "-")
+  base_tok=$(jq -rs '
+    [ .[] | select(.message.usage) | .message.usage
+      | (.input_tokens // 0) + (.cache_read_input_tokens // 0) + (.cache_creation_input_tokens // 0) ]
+    | if length > 0 then .[0] else 0 end
   ' "$tpath" 2>/dev/null)
-  base_tok=${1:-0}; cur_tok=${2:-0}; effort=${3:--}
 fi
 case "$base_tok" in ''|*[!0-9]*) base_tok=0 ;; esac
-case "$cur_tok"  in ''|*[!0-9]*) cur_tok=0 ;; esac
+case "$ctx_used" in ''|*[!0-9]*) ctx_used=0 ;; esac
+case "$ctx_win"  in ''|*[!0-9]*) ctx_win=0  ;; esac
 
-msg_tok=$((cur_tok - base_tok)); [ "$msg_tok" -lt 0 ] && msg_tok=0
+msg_tok=$((ctx_used - base_tok)); [ "$msg_tok" -lt 0 ] && msg_tok=0
+# taban güncel bağlamdan büyükse (yeni oturum, eski transcript) kırılımı gösterme
+[ "$base_tok" -gt "$ctx_used" ] && base_tok=0
 
 case "$effort" in
-  low)      eff="lo"  ;;
-  medium)   eff="med" ;;
-  high)     eff="hi"  ;;
+  low)       eff="lo"  ;;
+  medium)    eff="med" ;;
+  high)      eff="hi"  ;;
   max|xhigh) eff="max" ;;
-  *)        eff=""    ;;
+  *)         eff=""    ;;
 esac
 
 export SL_PROJECT="$proj_name"
 export SL_BRANCH="$branch"
 export SL_MODEL="$model"
 export SL_EFFORT="$eff"
-export SL_CTX_USED="$cur_tok"
-export SL_CTX_WINDOW=0          # Claude Code payload'ında pencere yok; mutlak eşik kullanılır
+export SL_CTX_USED="$ctx_used"
+export SL_CTX_WINDOW="$ctx_win"
 export SL_CTX_SYS="$base_tok"
 export SL_CTX_MSG="$msg_tok"
-export SL_ADDED="$added"
-export SL_REMOVED="$removed"
-export SL_DURATION="$dur"
+export SL_ADDED=0               # satır sayacı kaldırıldı — üç adaptör aynı biçim
+export SL_REMOVED=0
+export SL_DURATION=""           # oturum süresi düşük sinyal — kaldırıldı (codex ile tutarlı)
 export SL_COST="$cost_fmt"
 export SL_EXTRA=""
 

@@ -3,8 +3,6 @@
 # agy stdin'e Claude Code'unkine çok yakın bir JSON verir; farklar:
 #   - .context_window   : bağlam token + pencere + yüzde  (native, transcript parse gerekmez)
 #   - .model.effort     : reasoning effort
-#   - .quota            : rate-limit kovaları (5h / haftalık)
-#   - .sandbox.enabled  : sandbox kipi
 #   - maliyet / süre / satır bilgisi YOK (bu segmentler atlanır)
 #
 # Kurulum: agy içinde  /statusline <bu-dosyanın-yolu>   ya da
@@ -27,10 +25,7 @@ eval "$(printf '%s' "$input" | jq -r '
   @sh "win=\(.context_window.context_window_size // 0 | floor)",
   @sh "pct=\(.context_window.used_percentage // 0 | floor)",
   @sh "cur_usage=\(.context_window.current_usage // 0 | floor)",
-  @sh "in_tok=\(.context_window.total_input_tokens // 0 | floor)",
-  @sh "sandbox=\(.sandbox.enabled // false)",
-  @sh "astate=\(.agent_state // "")",
-  @sh "wk_frac=\(.quota["gemini-weekly"].remaining_fraction // .quota["3p-weekly"].remaining_fraction // 1)"
+  @sh "in_tok=\(.context_window.total_input_tokens // 0 | floor)"
 ')"
 
 proj_name=$(basename "$proj" 2>/dev/null)
@@ -65,19 +60,6 @@ else
   used=$in_tok
 fi
 
-# --- araç-özel kuyruk: sandbox + haftalık kota ---
-DIM='\033[2m'; RST='\033[0m'; YEL='\033[33m'
-extra=""
-[ "$sandbox" = "true" ] && extra="${DIM}sbx${RST}"
-# wk_frac 0..1 -> yüzde; sadece anlamlı düşünce (< %99) göster
-wk_pct=$(printf '%s' "$wk_frac" | awk '{ printf "%d", $1 * 100 }')
-case "$wk_pct" in ''|*[!0-9]*) wk_pct=100 ;; esac
-if [ "$wk_pct" -lt 99 ]; then
-  wcol="$DIM"; [ "$wk_pct" -lt 20 ] && wcol="$YEL"
-  seg="${wcol}wk ${wk_pct}%${RST}"
-  [ -n "$extra" ] && extra="${extra} ${seg}" || extra="$seg"
-fi
-
 export SL_PROJECT="$proj_name"
 export SL_BRANCH="$branch"
 export SL_MODEL="$model"
@@ -90,6 +72,6 @@ export SL_ADDED=0              # agy oturum satır verisi vermiyor
 export SL_REMOVED=0
 export SL_DURATION=""          # agy payload'ında süre yok
 export SL_COST=""              # agy payload'ında maliyet yok
-export SL_EXTRA="$extra"
+export SL_EXTRA=""             # sbx/kota kuyruğu kaldırıldı — üç adaptör aynı biçim
 
 exec /bin/sh "$CORE"

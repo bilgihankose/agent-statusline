@@ -4,23 +4,27 @@ A one-line status bar for agent CLIs. One shared renderer (`core.sh`), one thin
 adapter per agent. Same layout everywhere:
 
 ```
-BilgihanOS  main*  ·  Sonnet 5 med  ·  $2.34  ·  +210 -12  ·  2m18s  ·  sys 53k  msg 104k  Σ 157k
-BilgihanOS  main*  ·  Gemini 3.7 Flash hi  ·  ctx 87k/1.0M 8%  ·  sbx  wk 41%
-realtime-voice-chat  main*  ·  gpt-5.6-terra lo  ·  ctx 28k/258k 11%  ·  sbx  wk 68%
+BilgihanOS  main*  ·  Sonnet 5 med  ·  $2.34  ·  sys 53k  msg 104k  Σ 157k
+BilgihanOS  main*  ·  Gemini 3.7 Flash hi  ·  ctx 87k/1.0M 8%
+realtime-voice-chat  main*  ·  gpt-5.6-terra lo  ·  sys 22k  msg 6k  Σ 28k
 ```
+
+Every adapter renders the same shape: `project [branch] · model effort ·
+[$cost] · <context>`. Only Claude Code has cost; only Claude Code and Codex
+have the `sys/msg/Σ` breakdown (agy shows `ctx N/W %`).
 
 | Adapter | Agent | Notes |
 | --- | --- | --- |
-| [`claude-code/`](claude-code/) | [Claude Code](https://claude.com/claude-code) | cost + duration + `sys/msg/Σ` token breakdown from transcript |
-| [`agy/`](agy/) | [Antigravity CLI](https://antigravity.google) (`agy`) | native context %, weekly-quota + sandbox tail |
-| [`codex/`](codex/) | Codex | parses active session from `~/.codex/sessions/` (standalone / tmux) |
+| [`claude-code/`](claude-code/) | [Claude Code](https://claude.com/claude-code) | cost + effort/context from the stdin blob, `sys/msg/Σ` split |
+| [`agy/`](agy/) | [Antigravity CLI](https://antigravity.google) (`agy`) | native context %, no cost/lines in payload |
+| [`codex/`](codex/) | Codex | auto-parses the latest `~/.codex/sessions/` rollout, `sys/msg/Σ` split |
 
 Design and the `SL_*` field contract: [`SPEC.md`](SPEC.md).
 
 ## Requirements
 
 - `jq` on `PATH` (adapter exits silently if missing)
-- `sh` (POSIX), `git` (for branch + line counts)
+- `sh` (POSIX), `git` (for the branch segment)
 
 ## Install
 
@@ -63,4 +67,4 @@ or `~/.gemini/antigravity-cli/settings.json`:
 
 1. `mkdir <agent>/ && $EDITOR <agent>/statusline.sh`
 2. Read the agent's stdin JSON, set the `SL_*` vars (see `SPEC.md`), `exec /bin/sh "$(dirname "$0")/../core.sh"`.
-3. Put anything agent-specific in `SL_EXTRA`. Don't touch `core.sh`.
+3. Keep to the shared shape — leave a segment empty when the payload lacks it. `SL_EXTRA` exists for a genuinely agent-specific tail, but the three current adapters keep it empty on purpose. Don't touch `core.sh`.

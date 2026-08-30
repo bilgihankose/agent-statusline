@@ -1,11 +1,11 @@
 # claude-code statusline adapter
 
 A one-line status bar for [Claude Code](https://claude.com/claude-code), rendered
-below the prompt on every state change. Maps Claude Code's stdin JSON + transcript
-onto the shared [`../core.sh`](../core.sh) renderer.
+below the prompt on every state change. Maps Claude Code's stdin JSON onto the
+shared [`../core.sh`](../core.sh) renderer.
 
 ```
-BilgihanOS  main*  ·  Sonnet 5 med  ·  $2.34  ·  +210 -12  ·  2m18s  ·  sys 53k  msg 104k  Σ 157k
+BilgihanOS  main*  ·  Sonnet 5 med  ·  $2.34  ·  +210 -12  ·  sys 53k  msg 104k  Σ 157k
 ```
 
 | Segment | Meaning |
@@ -15,14 +15,16 @@ BilgihanOS  main*  ·  Sonnet 5 med  ·  $2.34  ·  +210 -12  ·  2m18s  ·  sys
 | `Sonnet 5 med` | model display name + reasoning effort (`lo` / `med` / `hi` / `max`) |
 | `$2.34` | cumulative session cost in USD (yellow at ≥ $5) |
 | `+210 -12` | file lines added / removed this session |
-| `2m18s` | session duration |
 | `sys 53k` | approx. tokens held by system prompt + tool schemas + memory files + first message (first transcript `usage` record) |
 | `msg 104k` | approx. tokens accumulated by the conversation since (last `usage` − first `usage`) |
 | `Σ 157k` | total context tokens on the last request (green < 200k, yellow < 400k, red ≥ 400k) |
 
-`sys` / `msg` is an approximation from the transcript's first vs. last `usage`
-record — not an exact `/context` breakdown. Effort comes from the transcript's
-top-level `.effort`, so a mid-session `/config` change shows immediately.
+Effort, total context tokens (`Σ`), and the context window all come straight from
+the stdin blob (`.effort.level`, `.context_window.*`), so they are populated from
+the first render and a mid-session `/config` change shows immediately. Only the
+`sys` baseline is read from the transcript's first `usage` record; `msg` is
+`Σ − sys`. When the transcript has no `usage` yet (fresh session) the breakdown
+collapses to a plain `ctx Σ/window %` segment.
 
 ## Requirements
 
@@ -50,13 +52,15 @@ somewhere stable (keeping the `../core.sh` relative layout, or set
 ## How it reads data
 
 Claude Code pipes a JSON blob to the command on stdin with `model`, `workspace`,
-`cost`, and `transcript_path`. The adapter takes cost / lines / duration / model
-from the blob, then opens `transcript_path` (JSONL) to compute the context-token
-breakdown and current effort — data not in the blob.
+`cost`, `effort`, `context_window`, and `transcript_path`. The adapter takes
+everything it renders from the blob; it only opens `transcript_path` (JSONL) to
+read the first `usage` record for the `sys` baseline of the `sys/msg` split.
 
 ## Notes
 
 - Cost counts **only** Claude Code's own API calls. Work delegated to a separate
   CLI (`agy`, `codex`) is billed elsewhere. Task-tool sub-agents *do* roll in.
-- Context colours assume a ~200k practical budget. On 1M context, adjust the
-  `200000` / `400000` constants in `../core.sh`.
+- Context colours: when the blob carries `context_window.context_window_size`
+  the segment is coloured by percentage (yellow ≥ 50%, red ≥ 80%). Without a
+  window it falls back to the absolute `200000` / `400000` thresholds in
+  `../core.sh`.

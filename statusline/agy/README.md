@@ -5,7 +5,7 @@ A one-line status bar for the [Antigravity CLI](https://antigravity.google)
 renderer.
 
 ```
-BilgihanOS  main*  ·  Gemini 3.7 Flash hi  ·  ctx 87k/1.0M 8%  ·  sbx  wk 41%
+BilgihanOS  main*  ·  Gemini 3.7 Flash hi  ·  ctx 87k/1.0M 8%
 ```
 
 | Segment | Meaning |
@@ -14,10 +14,10 @@ BilgihanOS  main*  ·  Gemini 3.7 Flash hi  ·  ctx 87k/1.0M 8%  ·  sbx  wk 41%
 | `main*` | git branch, `*` = uncommitted changes |
 | `Gemini 3.7 Flash hi` | model (trailing `(High)` stripped) + effort (`lo` / `med` / `hi` / `max`) |
 | `ctx 87k/1.0M 8%` | context tokens / window / fill (green < 50%, yellow < 80%, red ≥ 80%) |
-| `sbx` | shown when the session runs under `--sandbox` |
-| `wk 41%` | weekly Gemini quota remaining — only shown below 99%, yellow below 20% |
 
-No cost, duration, or line change segment: agy's statusline payload carries none of these.
+No cost, duration, or line-change segment: agy's statusline payload carries none
+of these. Sandbox / quota tails were dropped to keep all three adapters on the
+same shape.
 
 ## Requirements
 
@@ -56,8 +56,5 @@ agy pipes a JSON blob very close to Claude Code's — same `model` / `workspace`
   The adapter prefers `used_percentage × window`, falling back to `current_usage`,
   then `total_input_tokens`.
 - `model.effort` — `low` / `medium` / `high`
-- `quota` — rate-limit buckets (`gemini-5h`, `gemini-weekly`, `3p-*`) each with a
-  `remaining_fraction`
-- `sandbox.enabled`
 
 
